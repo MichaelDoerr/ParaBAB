@@ -28,12 +28,15 @@ public class BAndB implements Runnable {
             }
 
             for (BranchNode s : currentNode.getSubNodes(currentBest)) {
-                synchronized (currentBest) {
-                    if (s.isSolution() && s.cost() < currentBest.cost()) {
-                        System.out.println("SOLUTION");
-                        currentBest.update(s);
+                if (s.isSolution()) {
+                    synchronized (currentBest) {
+                        if (s.cost() < currentBest.cost()) {
+                            System.out.println("SOLUTION");
+                            currentBest.update(s);
+                        }
                     }
                 }
+
                 if (s.hasSubnodes() && s.getMinimalCost() < currentBest.cost()) {
                     set.put(s);
                 }

@@ -7,7 +7,6 @@ import java.util.concurrent.PriorityBlockingQueue;
 public class Main {
 
     public static void main(String[] args) {
-        long startTime = System.currentTimeMillis();
 
         int cores = Runtime.getRuntime().availableProcessors();
         //cores = 1;
@@ -54,7 +53,7 @@ public class Main {
         //                {0, 0, 8,  5, 0, 0,  0, 1, 0},
         //                {0, 9, 0,  0, 0, 0,  4, 0, 0}};
 
-        BranchNode root = new SudokuNode(sud, null);
+        BranchNode root = new SudokuNode(sud, null, 0);
 
         Solution currentBest = new Solution(root);
         set.put(root);
@@ -81,6 +80,7 @@ public class Main {
             threads.add(new Thread(new BAndB(currentBest, set)));
             threads.get(i).start();
         }
+        long startTime = System.currentTimeMillis();
         for (int i = 0; i < cores; i++) {
             try {
                 threads.get(i).join();

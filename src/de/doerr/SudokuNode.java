@@ -5,15 +5,13 @@ import java.util.stream.IntStream;
 
 public class SudokuNode implements BranchNode {
 
-    private static long id = Long.MIN_VALUE;
     private double cost;
-    private long myID;
     private int[][] sudoku;
+    private int depth;
     private Map<Integer, List<Integer>> possible;
 
-    public SudokuNode(int[][] sudoku, Map<Integer, List<Integer>> possible) {
-        myID = id;
-        ++id;
+    public SudokuNode(int[][] sudoku, Map<Integer, List<Integer>> possible, int depth) {
+        this.depth = depth;
         boolean contains = false;
         for (int i = 0; !contains && i < 9; i++) {
             contains = IntStream.of(sudoku[i]).anyMatch(x -> x == 0);
@@ -73,7 +71,7 @@ public class SudokuNode implements BranchNode {
                     for (Integer k : possible.get(10 * i + j)) {
                         this.sudoku[i][j] = k;
                         if (this.square(i, j) && this.rowsandcols(i, j)) {
-                            subs.add(new SudokuNode(sudoku, possible));
+                            subs.add(new SudokuNode(sudoku, possible, depth + 1));
                         }
                     }
                     return subs;
@@ -94,12 +92,12 @@ public class SudokuNode implements BranchNode {
     }
 
     public double prio() {
-        return myID;
+        return depth;
     }
 
     @Override
     public int compareTo(BranchNode o) {
-        return Double.compare(o.prio(), myID);
+        return Double.compare(o.prio(), depth);
     }
 
     private boolean square(int row, int col) {
